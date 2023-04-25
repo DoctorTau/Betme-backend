@@ -1,0 +1,37 @@
+# ASP.NET Core
+*.dll
+*.exe
+*.pdb
+*.user
+obj/
+bin/
+# .NET Core
+*.suo
+*.cache
+*.log
+# Visual Studio
+.vs/
+*.vs/
+*.sln.iml
+*.suo
+*.userprefs
+*.sln.docstates
+# Visudal Studio Code
+.vscode/
+# NuGet Packages
+*.nupkg
+# MSTest test Results
+TestResults/
+# Build Results
+[Bb]uild/
+# Node.js
+node_modules/
+# Typescript
+*.js
+*.map
+*.ts
+*.js.map
+*.ts.map
+# Other
+*.DS_Store
+Thumbs.db

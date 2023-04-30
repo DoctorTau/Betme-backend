@@ -47,6 +47,16 @@ public class BetService : IBetService
         return Task.FromResult(bet);
     }
 
+    public Task<List<User>> GetAllUsersOfBetAsync(int betId)
+    {
+        List<int> userIds = _dbContext.UserBets.Where(ub => ub.BetId == betId)
+                                               .Select(ub => ub.UserId)
+                                               .ToList();
+        List<User> users = _dbContext.Users.Where(u => userIds.Contains(u.Id))
+                                           .ToList();
+        return Task.FromResult(users);
+    }
+
     public async Task<Outcome> AddOutcomeAsync(OutcomeDto outcomeDto)
     {
         Outcome outcome = new()

@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using BetMe.Database;
@@ -33,6 +32,12 @@ public class AuthController : ControllerBase
             PasswordHash = hashedPassword,
             RegistrationDate = DateTime.Now.ToUniversalTime()
         };
+
+        if (_dbContext.Users.Any(u => u.Email == user.Email))
+        {
+            return BadRequest("User with this email already exists.");
+        }
+
         await _dbContext.Users.AddAsync(user);
         await _dbContext.SaveChangesAsync();
 

@@ -1,4 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
 using BetMe.Models;
 using BetMe.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -58,5 +57,12 @@ public class BetController : ControllerBase
     {
         Outcome outcome = await _betService.AddOutcomeAsync(outcomeDto);
         return Ok(outcome);
+    }
+
+    [HttpGet("{id}/participants")]
+    public async Task<IActionResult> GetAllUsersOfBetAsync(int id)
+    {
+        List<User> users = await _betService.GetAllUsersOfBetAsync(id);
+        return Ok(users);
     }
 }

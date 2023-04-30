@@ -36,4 +36,14 @@ public class UserService : IUserService
         }
         return user;
     }
+
+    public async Task<List<Bet>> GetAllBetsOfUserAsync(int userId)
+    {
+        List<int> betIds = await _dbContext.UserBets.Where(ub => ub.UserId == userId)
+                                                    .Select(ub => ub.BetId)
+                                                    .ToListAsync();
+        List<Bet> bets = await _dbContext.Bets.Where(b => betIds.Contains(b.Id))
+                                              .ToListAsync();
+        return bets;
+    }
 }

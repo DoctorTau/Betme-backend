@@ -35,5 +35,19 @@ public class UserController : ControllerBase
             return NotFound("User not found.");
         }
     }
+
+    [HttpGet("{id}/bets")]
+    public async Task<IActionResult> GetAllBetsOfUserAsync(int id)
+    {
+        try
+        {
+            List<Bet> bets = await _userService.GetAllBetsOfUserAsync(id);
+            return Ok(bets);
+        }
+        catch (ArgumentException)
+        {
+            return NotFound("User not found.");
+        }
+    }
 }
 

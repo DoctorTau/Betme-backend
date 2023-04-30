@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
             RegistrationDate = DateTime.Now.ToUniversalTime()
         };
         await _dbContext.Users.AddAsync(user);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
 
         return Ok(user);
     }
@@ -66,6 +66,7 @@ public class AuthController : ControllerBase
     {
         var claims = new List<Claim>
         {
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Name),
             new Claim(ClaimTypes.Email, user.Email),
         };

@@ -46,4 +46,16 @@ public interface IBetService
     /// <param name="userBet"> Participant params.</param>
     /// <returns> Created link.</returns>
     Task<UserBet> AddUserToBetAsync(UserBet userBet);
+    /// <summary>
+    /// Starts the bet.
+    /// </summary>
+    /// <param name="betId"> Bet to start.</param>
+    /// <returns> Started bet.</returns>
+    Task<Bet> StartBetAsync(int betId);
+    /// <summary>
+    /// Finishes the bet and starts the voting.
+    /// </summary>
+    /// <param name="betId"> Bet to finish id.</param>
+    /// <returns> Bet on stage of voting. </returns>
+    Task<Bet> FinishBetAsync(int betId);
 }

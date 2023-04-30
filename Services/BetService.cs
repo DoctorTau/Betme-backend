@@ -81,8 +81,71 @@ public class BetService : IBetService
     public Task<UserBet> AddUserToBetAsync(UserBet userBet)
     {
         _dbContext.UserBets.Add(userBet);
+        // Increment Selections to outcome.
+        Outcome? outcome = _dbContext.Outcomes.FirstOrDefault(o => o.Id == userBet.OutcomeId);
+        if (outcome == null)
+        {
+            throw new ArgumentException("Outcome not found.");
+        }
+        outcome.Selections++;
+        _dbContext.Outcomes.Update(outcome);
         _dbContext.SaveChanges();
 
         return Task.FromResult(userBet);
     }
+
+    public async Task<Bet> StartBetAsync(int betId)
+    {
+        Bet? bet = await _dbContext.Bets.FirstOrDefaultAsync(b => b.Id == betId);
+        if (bet == null)
+        {
+            throw new ArgumentException("Bet not found.");
+        }
+
+        DeleteUnselectedOutcomes(bet);
+
+        bet.Status = BetStatus.Open;
+
+        // Create a timer to finish the bet at the specified time.
+        Timer timer = new Timer(async _ =>
+        {
+            await FinishBetAsync(betId);
+        }, null, bet.ClosedAt - DateTime.UtcNow, TimeSpan.Zero);
+
+        await _dbContext.SaveChangesAsync();
+        return bet;
+    }
+
+    public Task<Bet> FinishBetAsync(int betId)
+    {
+        Bet? bet = _dbContext.Bets.FirstOrDefault(b => b.Id == betId);
+        if (bet == null)
+        {
+            throw new ArgumentException("Bet not found.");
+        }
+
+        bet.Status = BetStatus.Voting;
+        _dbContext.Bets.Update(bet);
+        _dbContext.SaveChanges();
+
+        return Task.FromResult(bet);
+    }
+
+    private void DeleteUnselectedOutcomes(Bet bet)
+    {
+        List<Outcome> outcomes = _dbContext.Outcomes.Where(o => o.BetId == bet.Id)
+                                                   .ToList();
+        List<Outcome> outcomesToDelete = new();
+        foreach (Outcome outcome in outcomes)
+        {
+            if (outcome.Selections == 0)
+            {
+                outcomesToDelete.Add(outcome);
+            }
+        }
+
+        _dbContext.Outcomes.RemoveRange(outcomesToDelete);
+        _dbContext.SaveChanges();
+    }
+
 }

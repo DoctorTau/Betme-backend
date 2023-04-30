@@ -1,3 +1,5 @@
+using BetMe.Database;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +8,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add db context with postgres
+builder.Services.AddDbContext<AppDbContext>();
 
 // Add cors
 builder.Services.AddCors(options =>

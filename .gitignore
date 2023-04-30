@@ -37,4 +37,4 @@ node_modules/
 Thumbs.db
 
 # Ignore settings with tokens
-**/appsettings.json
+appsettings.json

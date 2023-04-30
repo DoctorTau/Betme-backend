@@ -39,17 +39,17 @@ public class BetController : ControllerBase
     [HttpPost, Authorize]
     public async Task<IActionResult> CreateBetAsync(BetCreatingDto bet)
     {
-        int userId;
         try
         {
-            int.TryParse(User?.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value, out userId);
+            int userId = GetUserIdFromJwt();
+
+            Bet newBet = await _betService.CreateBetAsync(bet, userId);
+            return Ok(newBet);
         }
-        catch (Exception)
+        catch (ArgumentException)
         {
-            return BadRequest("Error while jwt parsing.");
+            return NotFound("User not found.");
         }
-        Bet newBet = await _betService.CreateBetAsync(bet, userId);
-        return Ok(newBet);
     }
 
     [HttpPost("outcome"), Authorize]
@@ -64,5 +64,35 @@ public class BetController : ControllerBase
     {
         List<User> users = await _betService.GetAllUsersOfBetAsync(id);
         return Ok(users);
+    }
+
+    [HttpGet("{id}/outcomes")]
+    public async Task<IActionResult> GetAllOutcomesOfBetAsync(int id)
+    {
+        List<Outcome> outcomes = await _betService.GetAllOutcomesOfBetAsync(id);
+        return Ok(outcomes);
+    }
+
+    [HttpGet("{id}/join"), Authorize]
+    public async Task<IActionResult> JoinBetAsync(UserBet userBet)
+    {
+        try
+        {
+            int userId = GetUserIdFromJwt();
+
+            await _betService.AddUserToBetAsync(userBet);
+            return Ok();
+        }
+        catch (ArgumentException)
+        {
+            return NotFound("User not found.");
+        }
+    }
+
+    private int GetUserIdFromJwt()
+    {
+        int userId;
+        int.TryParse(User?.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value, out userId);
+        return userId;
     }
 }

@@ -34,4 +34,16 @@ public interface IBetService
     /// <param name="outcomeDto"> Outcome params.</param>
     /// <returns> Created outcome.</returns>
     Task<Outcome> AddOutcomeAsync(OutcomeDto outcomeDto);
+    /// <summary>
+    /// Gets all outcomes of the bet.
+    /// </summary>
+    /// <param name="betId">Id of the bet.</param>
+    /// <returns> List of outcomes of the bet.</returns>
+    Task<List<Outcome>> GetAllOutcomesOfBetAsync(int betId);
+    /// <summary>
+    /// Adds a participant to the bet.
+    /// </summary>
+    /// <param name="userBet"> Participant params.</param>
+    /// <returns> Created link.</returns>
+    Task<UserBet> AddUserToBetAsync(UserBet userBet);
 }

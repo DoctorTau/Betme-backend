@@ -70,4 +70,19 @@ public class BetService : IBetService
 
         return outcome;
     }
+
+    public async Task<List<Outcome>> GetAllOutcomesOfBetAsync(int betId)
+    {
+        List<Outcome> outcomes = await _dbContext.Outcomes.Where(o => o.BetId == betId)
+                                                          .ToListAsync();
+        return outcomes;
+    }
+
+    public Task<UserBet> AddUserToBetAsync(UserBet userBet)
+    {
+        _dbContext.UserBets.Add(userBet);
+        _dbContext.SaveChanges();
+
+        return Task.FromResult(userBet);
+    }
 }

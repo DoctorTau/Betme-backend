@@ -53,4 +53,10 @@ public class BetController : ControllerBase
         return Ok(newBet);
     }
 
+    [HttpPost("outcome"), Authorize]
+    public async Task<IActionResult> AddOutcomeAsync(OutcomeDto outcomeDto)
+    {
+        Outcome outcome = await _betService.AddOutcomeAsync(outcomeDto);
+        return Ok(outcome);
+    }
 }

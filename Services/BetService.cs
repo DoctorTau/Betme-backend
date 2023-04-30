@@ -46,4 +46,18 @@ public class BetService : IBetService
         }
         return Task.FromResult(bet);
     }
+
+    public async Task<Outcome> AddOutcomeAsync(OutcomeDto outcomeDto)
+    {
+        Outcome outcome = new()
+        {
+            BetId = outcomeDto.BetId,
+            Name = outcomeDto.Name
+        };
+
+        await _dbContext.Outcomes.AddAsync(outcome);
+        await _dbContext.SaveChangesAsync();
+
+        return outcome;
+    }
 }

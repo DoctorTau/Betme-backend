@@ -1,9 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace BetMe.Models;
 
-public class Outcome
+public class OutcomeDto
 {
-    public int Id { get; set; }
+    [Required, MaxLength(256)]
     public String Name { get; set; } = string.Empty;
+    [Required]
     public int BetId { get; set; }
-    public int Votes { get; set; } = 0;
 }

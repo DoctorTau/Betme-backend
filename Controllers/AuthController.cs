@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using BetMe.Database;
+using BetMe.Models;
 
-namespace BetMe.Models;
+namespace BetMe.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

@@ -1,4 +1,5 @@
 using BetMe.Database;
+using BetMe.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,9 @@ builder.Services.AddSwaggerGen();
 
 // Add db context with postgres
 builder.Services.AddDbContext<AppDbContext>();
+
+// Add services
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Add cors
 builder.Services.AddCors(options =>

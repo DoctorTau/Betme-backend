@@ -3,6 +3,7 @@ using System;
 using BetMe.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BetMe_BackEnd.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230501121623_BetWinOutcomeIdMigr")]
+    partial class BetWinOutcomeIdMigr
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,9 +128,6 @@ namespace BetMe_BackEnd.Migrations
 
                     b.Property<int>("BetId")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("HasVoted")
-                        .HasColumnType("boolean");
 
                     b.Property<int>("OutcomeId")
                         .HasColumnType("integer");

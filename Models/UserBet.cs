@@ -6,5 +6,6 @@ namespace BetMe.Models
         public int BetId { get; set; }
         public int UserId { get; set; }
         public int OutcomeId { get; set; }
+        public bool HasVoted { get; set; } = false;
     }
 }

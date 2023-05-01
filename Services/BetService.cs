@@ -118,7 +118,7 @@ public class BetService : IBetService
         return bet;
     }
 
-    public Task<Bet> FinishBetAsync(int betId)
+    public async Task<Bet> FinishBetAsync(int betId)
     {
         Bet? bet = _dbContext.Bets.FirstOrDefault(b => b.Id == betId);
         if (bet == null)
@@ -128,9 +128,44 @@ public class BetService : IBetService
 
         bet.Status = BetStatus.Voting;
         _dbContext.Bets.Update(bet);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
 
-        return Task.FromResult(bet);
+        return bet;
+    }
+
+    public async Task<Bet> VoteAsync(UserBetDto userBetDto)
+    {
+        UserBet? userBet = _dbContext.UserBets.FirstOrDefault(ub => ub.BetId == userBetDto.BetId && ub.UserId == userBetDto.UserId);
+        if (userBet == null)
+        {
+            throw new ArgumentException("UserBet not found.");
+        }
+
+        Outcome? outcome = _dbContext.Outcomes.FirstOrDefault(o => o.Id == userBetDto.OutcomeId);
+        if (outcome == null)
+        {
+            throw new ArgumentException("Outcome not found.");
+        }
+
+        Bet? bet = await GetBetByIdAsync(userBetDto.BetId);
+        if (bet.Status != BetStatus.Voting)
+        {
+            throw new ArgumentException("Bet is not in voting phase.");
+        }
+
+        if (userBet.HasVoted)
+        {
+            throw new ArgumentException("User has already voted.");
+        }
+
+        userBet.HasVoted = true;
+        outcome.Votes++;
+
+        _dbContext.Outcomes.Update(outcome);
+        _dbContext.UserBets.Update(userBet);
+        await _dbContext.SaveChangesAsync();
+
+        return await GetBetByIdAsync(userBetDto.BetId);
     }
 
     private void DeleteUnselectedOutcomes(Bet bet)
@@ -148,6 +183,58 @@ public class BetService : IBetService
 
         _dbContext.Outcomes.RemoveRange(outcomesToDelete);
         _dbContext.SaveChanges();
+    }
+
+    private async Task FinishBetVoting(int betId)
+    {
+        Bet? bet = await _dbContext.Bets.FirstOrDefaultAsync(b => b.Id == betId);
+        if (bet == null)
+        {
+            throw new ArgumentException("Bet not found.");
+        }
+
+        if (CheckVotingInBet(bet))
+        {
+            bet.Status = BetStatus.Closed;
+        }
+        await SetWinner(bet);
+    }
+
+    private async Task SetWinner(Bet bet)
+    {
+        List<Outcome> outcomes = await GetAllOutcomesOfBetAsync(bet.Id);
+        outcomes = outcomes.OrderByDescending(o => o.Votes)
+                           .ToList();
+        if (outcomes.Count == 0)
+        {
+            throw new ArgumentException("No outcomes found.");
+        }
+
+        Outcome winner = outcomes[0];
+        bet.WinOutcomeId = winner.Id;
+
+        _dbContext.Bets.Update(bet);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    private bool CheckVotingInBet(Bet bet)
+    {
+        if (bet.Status != BetStatus.Voting)
+        {
+            return false;
+        }
+
+        List<UserBet> userBets = _dbContext.UserBets.Where(ub => ub.BetId == bet.Id)
+                                                    .ToList();
+        foreach (UserBet userBet in userBets)
+        {
+            if (!userBet.HasVoted)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }

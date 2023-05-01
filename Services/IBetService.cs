@@ -58,4 +58,10 @@ public interface IBetService
     /// <param name="betId"> Bet to finish id.</param>
     /// <returns> Bet on stage of voting. </returns>
     Task<Bet> FinishBetAsync(int betId);
+    /// <summary>
+    /// Makes a vote.
+    /// </summary>
+    /// <param name="userBetDto"> A user, bet and outcome id of the vote.</param>
+    /// <returns> The Bet where vote were made.</returns>
+    Task<Bet> VoteAsync(UserBetDto userBetDto);
 }

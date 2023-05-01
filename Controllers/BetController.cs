@@ -111,6 +111,20 @@ public class BetController : ControllerBase
         }
     }
 
+    [HttpPost("vote"), Authorize]
+    public async Task<IActionResult> VoteAsync(UserBetDto userBetDto)
+    {
+        try
+        {
+            await _betService.VoteAsync(userBetDto);
+            return Ok();
+        }
+        catch (ArgumentException e)
+        {
+            return NotFound(e.Message);
+        }
+    }
+
     private int GetUserIdFromJwt()
     {
         int userId;

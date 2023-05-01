@@ -9,6 +9,7 @@ public class Bet
     public DateTime CreatedAt { get; set; }
     public DateTime ClosedAt { get; set; }
     public BetStatus Status { get; set; }
+    public int WinOutcomeId { get; set; } = -1;
 
     public Bet(string name, string description, DateTime closedAt, int creatorId)
     {

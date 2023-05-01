@@ -15,18 +15,19 @@ public class BetService : IBetService
 
     public async Task<Bet> CreateBetAsync(BetCreatingDto bet, int userId)
     {
-        Bet newBet = new Bet
-        {
-            Name = bet.Name,
-            Description = bet.Description,
-            ClosedAt = bet.ClosedAt,
-            CreatorId = userId,
-            CreatedAt = DateTime.UtcNow,
-            Status = BetStatus.Creating
-        };
+        Bet newBet = new(bet.Name,
+                         bet.Description,
+                         bet.ClosedAt,
+                         userId);
 
         await _dbContext.Bets.AddAsync(newBet);
         await _dbContext.SaveChangesAsync();
+
+        // Create a timer to finish the bet at the specified time.
+        Timer timer = new Timer(async _ =>
+        {
+            await FinishBetAsync(newBet.Id);
+        }, null, bet.ClosedAt - DateTime.UtcNow, TimeSpan.Zero);
 
         return newBet;
     }
@@ -78,9 +79,10 @@ public class BetService : IBetService
         return outcomes;
     }
 
-    public Task<UserBet> AddUserToBetAsync(UserBet userBet)
+    public Task<UserBet> AddUserToBetAsync(UserBetDto userBet)
     {
-        _dbContext.UserBets.Add(userBet);
+        UserBet ub = new UserBet { BetId = userBet.BetId, UserId = userBet.UserId };
+        _dbContext.UserBets.Add(ub);
         // Increment Selections to outcome.
         Outcome? outcome = _dbContext.Outcomes.FirstOrDefault(o => o.Id == userBet.OutcomeId);
         if (outcome == null)
@@ -91,7 +93,7 @@ public class BetService : IBetService
         _dbContext.Outcomes.Update(outcome);
         _dbContext.SaveChanges();
 
-        return Task.FromResult(userBet);
+        return Task.FromResult(ub);
     }
 
     public async Task<Bet> StartBetAsync(int betId)
@@ -104,13 +106,13 @@ public class BetService : IBetService
 
         DeleteUnselectedOutcomes(bet);
 
+        if (DateTime.Now > bet.ClosedAt)
+        {
+            throw new ArgumentException("You can't start a bet after the closing time.");
+        }
+
         bet.Status = BetStatus.Open;
 
-        // Create a timer to finish the bet at the specified time.
-        Timer timer = new Timer(async _ =>
-        {
-            await FinishBetAsync(betId);
-        }, null, bet.ClosedAt - DateTime.UtcNow, TimeSpan.Zero);
 
         await _dbContext.SaveChangesAsync();
         return bet;

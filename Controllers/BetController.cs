@@ -46,9 +46,9 @@ public class BetController : ControllerBase
             Bet newBet = await _betService.CreateBetAsync(bet, userId);
             return Ok(newBet);
         }
-        catch (ArgumentException)
+        catch (ArgumentException e)
         {
-            return NotFound("User not found.");
+            return NotFound(e.Message);
         }
     }
 
@@ -73,8 +73,8 @@ public class BetController : ControllerBase
         return Ok(outcomes);
     }
 
-    [HttpGet("{id}/join"), Authorize]
-    public async Task<IActionResult> JoinBetAsync(UserBet userBet)
+    [HttpPost("{id}/join"), Authorize]
+    public async Task<IActionResult> JoinBetAsync(UserBetDto userBet)
     {
         try
         {

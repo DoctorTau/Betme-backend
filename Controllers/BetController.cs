@@ -89,6 +89,28 @@ public class BetController : ControllerBase
         }
     }
 
+    [HttpPost("{id}/start"), Authorize]
+    public async Task<IActionResult> StartBetAsync(int id)
+    {
+        try
+        {
+            int userId = GetUserIdFromJwt();
+            Bet bet = await _betService.GetBetByIdAsync(id);
+            if (bet.CreatorId != userId)
+            {
+                return Unauthorized("You are not the creator of the bet.");
+            }
+
+            bet = await _betService.StartBetAsync(id);
+
+            return Ok(bet);
+        }
+        catch (ArgumentException)
+        {
+            return NotFound("Bet not found.");
+        }
+    }
+
     private int GetUserIdFromJwt()
     {
         int userId;

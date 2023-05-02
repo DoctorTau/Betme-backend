@@ -1,0 +1,24 @@
+# Ignore build artifacts
+bin/
+obj/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.vs/
+.vscode/
+
+# Ignore editor and IDE files
+*.pidb
+*.resharper
+*.resharper.user
+*.sln.docstates
+*.sln.ide
+
+# Ignore project-specific files
+*.csproj.user
+*.bak
+*.bak_*
+packages/
+node_modules/
+bower_components/

@@ -15,7 +15,8 @@ public class AppDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
         // connect to postgres with connection string from app settings
-        options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+        options.UseNpgsql(Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+                          ?? Configuration.GetConnectionString("DefaultConnection"));
     }
 
     public required DbSet<User> Users { get; set; }

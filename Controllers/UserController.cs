@@ -1,5 +1,6 @@
 using BetMe.Models;
 using BetMe.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BetMe.Controllers;
@@ -43,6 +44,34 @@ public class UserController : ControllerBase
         {
             List<Bet> bets = await _userService.GetAllBetsOfUserAsync(id);
             return Ok(bets);
+        }
+        catch (ArgumentException)
+        {
+            return NotFound("User not found.");
+        }
+    }
+
+    [HttpPut("{id}"), Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateUserAsync(int id, User user)
+    {
+        try
+        {
+            User updatedUser = await _userService.UpdateUserAsync(id, user);
+            return Ok(updatedUser);
+        }
+        catch (ArgumentException)
+        {
+            return NotFound("User not found.");
+        }
+    }
+
+    [HttpDelete("{id}"), Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteUserAsync(int id)
+    {
+        try
+        {
+            await _userService.DeleteUserAsync(id);
+            return Ok();
         }
         catch (ArgumentException)
         {

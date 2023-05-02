@@ -64,4 +64,10 @@ public interface IBetService
     /// <param name="userBetDto"> A user, bet and outcome id of the vote.</param>
     /// <returns> The Bet where vote were made.</returns>
     Task<Bet> VoteAsync(UserBetDto userBetDto);
+    /// <summary>
+    /// Deletes the bet.
+    /// </summary>
+    /// <param name="betId"> Id of bet to delete.</param>
+    /// <returns> Deleted bet.</returns>
+    Task<Bet> DeleteBetAsync(int betId);
 }

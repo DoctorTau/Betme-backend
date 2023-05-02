@@ -125,6 +125,20 @@ public class BetController : ControllerBase
         }
     }
 
+    [HttpDelete("{id}"), Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteBetAsync(int id)
+    {
+        try
+        {
+            await _betService.DeleteBetAsync(id);
+            return Ok();
+        }
+        catch (ArgumentException)
+        {
+            return NotFound("Bet not found.");
+        }
+    }
+
     private int GetUserIdFromJwt()
     {
         int userId;

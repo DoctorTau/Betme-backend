@@ -46,4 +46,29 @@ public class UserService : IUserService
                                               .ToListAsync();
         return bets;
     }
+
+    public async Task<User> UpdateUserAsync(int id, User user)
+    {
+        User? userToUpdate = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+        if (userToUpdate == null)
+        {
+            throw new ArgumentException("User not found");
+        }
+
+        userToUpdate.CopyFrom(user);
+        await _dbContext.SaveChangesAsync();
+        return userToUpdate;
+    }
+
+    public async Task<User> DeleteUserAsync(int userId)
+    {
+        User? user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null)
+        {
+            throw new ArgumentException("User not found");
+        }
+        _dbContext.Users.Remove(user);
+        await _dbContext.SaveChangesAsync();
+        return user;
+    }
 }

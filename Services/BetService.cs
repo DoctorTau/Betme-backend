@@ -217,6 +217,20 @@ public class BetService : IBetService
         await _dbContext.SaveChangesAsync();
     }
 
+    public Task<Bet> DeleteBetAsync(int betId)
+    {
+        Bet? bet = _dbContext.Bets.FirstOrDefault(b => b.Id == betId);
+        if (bet == null)
+        {
+            throw new ArgumentException("Bet not found.");
+        }
+
+        _dbContext.Bets.Remove(bet);
+        _dbContext.SaveChanges();
+
+        return Task.FromResult(bet);
+    }
+
     private bool CheckVotingInBet(Bet bet)
     {
         if (bet.Status != BetStatus.Voting)
@@ -236,5 +250,4 @@ public class BetService : IBetService
 
         return true;
     }
-
 }

@@ -23,4 +23,19 @@ public interface IUserService
     /// <param name="userId"> User id.</param>
     /// <returns> List of all bets where user takes part in.</returns>
     Task<List<Bet>> GetAllBetsOfUserAsync(int userId);
+
+    /// <summary>
+    /// Updates user.
+    /// </summary>
+    /// <param name="user"> New user params.</param>
+    /// <returns> Updated user.</returns>
+    Task<User> UpdateUserAsync(int id, User user);
+
+
+    /// <summary>
+    /// Deletes user.
+    /// </summary>
+    /// <param name="userId"> Id of user to delete.</param>
+    /// <returns> Deleted user.</returns>
+    Task<User> DeleteUserAsync(int userId);
 }

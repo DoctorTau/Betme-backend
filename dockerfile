@@ -16,9 +16,5 @@ RUN dotnet build
 
 EXPOSE 5432 5091
 
-# install Entity Framework tool and init migration
-RUN dotnet new tool-manifest && dotnet tool install dotnet-ef && \
-    dotnet ef database update
-
 # Run an application
 CMD ["dotnet", "run", "--urls", "http://0.0.0.0:5091"]

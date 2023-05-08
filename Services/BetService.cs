@@ -48,14 +48,11 @@ public class BetService : IBetService
         return Task.FromResult(bet);
     }
 
-    public Task<List<User>> GetAllUsersOfBetAsync(int betId)
+    public Task<List<UserBet>> GetAllUsersOfBetAsync(int betId)
     {
-        List<int> userIds = _dbContext.UserBets.Where(ub => ub.BetId == betId)
-                                               .Select(ub => ub.UserId)
+        List<UserBet> userBets = _dbContext.UserBets.Where(ub => ub.BetId == betId)
                                                .ToList();
-        List<User> users = _dbContext.Users.Where(u => userIds.Contains(u.Id))
-                                           .ToList();
-        return Task.FromResult(users);
+        return Task.FromResult(userBets);
     }
 
     public async Task<Outcome> AddOutcomeAsync(OutcomeDto outcomeDto)
@@ -81,7 +78,7 @@ public class BetService : IBetService
 
     public Task<UserBet> AddUserToBetAsync(UserBetDto userBet)
     {
-        UserBet ub = new UserBet { BetId = userBet.BetId, UserId = userBet.UserId };
+        UserBet ub = new UserBet { BetId = userBet.BetId, UserId = userBet.UserId, OutcomeId = userBet.OutcomeId };
         _dbContext.UserBets.Add(ub);
         // Increment Selections to outcome.
         Outcome? outcome = _dbContext.Outcomes.FirstOrDefault(o => o.Id == userBet.OutcomeId);

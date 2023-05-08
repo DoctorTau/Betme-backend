@@ -20,7 +20,7 @@ public interface IBetService
     /// </summary>
     /// <param name="betId"> Id of the bet.</param>
     /// <returns>List of participants.</returns>
-    Task<List<User>> GetAllUsersOfBetAsync(int betId);
+    Task<List<UserBet>> GetAllUsersOfBetAsync(int betId);
     /// <summary>
     /// Creates a new bet.
     /// </summary>

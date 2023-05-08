@@ -62,8 +62,8 @@ public class BetController : ControllerBase
     [HttpGet("{id}/participants")]
     public async Task<IActionResult> GetAllUsersOfBetAsync(int id)
     {
-        List<User> users = await _betService.GetAllUsersOfBetAsync(id);
-        return Ok(users);
+        List<UserBet> userBets = await _betService.GetAllUsersOfBetAsync(id);
+        return Ok(userBets);
     }
 
     [HttpGet("{id}/outcomes")]
@@ -89,7 +89,7 @@ public class BetController : ControllerBase
         }
     }
 
-    [HttpPost("{id}/start"), Authorize]
+    [HttpPut("{id}/start"), Authorize]
     public async Task<IActionResult> StartBetAsync(int id)
     {
         try
@@ -111,7 +111,7 @@ public class BetController : ControllerBase
         }
     }
 
-    [HttpPost("vote"), Authorize]
+    [HttpPut("vote"), Authorize]
     public async Task<IActionResult> VoteAsync(UserBetDto userBetDto)
     {
         try

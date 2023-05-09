@@ -125,6 +125,25 @@ public class BetController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Checks if the user has voted for the given bet.
+    /// </summary>
+    /// <param name="betId"> Bet to check in.</param>
+    /// <returns>True if user have voted and false otherwise</returns>
+    [HttpGet("{betId}/checkVote/{userId}"), Authorize]
+    public async Task<IActionResult> CheckIfUserVotedAsync(int betId, int userId)
+    {
+        try
+        {
+            bool voted = await _betService.HasUserVotedAsync(betId, userId);
+            return Ok(voted);
+        }
+        catch (ArgumentException)
+        {
+            return NotFound("Bet not found.");
+        }
+    }
+
     [HttpDelete("{id}"), Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteBetAsync(int id)
     {

@@ -172,6 +172,17 @@ public class BetService : IBetService
         return await GetBetByIdAsync(userBetDto.BetId);
     }
 
+    public Task<Boolean> HasUserVotedAsync(int betId, int userId)
+    {
+        UserBet? userBet = _dbContext.UserBets.FirstOrDefault(ub => ub.BetId == betId && ub.UserId == userId);
+        if (userBet == null)
+        {
+            throw new ArgumentException("UserBet not found.");
+        }
+
+        return Task.FromResult(userBet.HasVoted);
+    }
+
     private void DeleteUnselectedOutcomes(Bet bet)
     {
         List<Outcome> outcomes = _dbContext.Outcomes.Where(o => o.BetId == bet.Id)

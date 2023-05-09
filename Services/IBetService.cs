@@ -65,6 +65,13 @@ public interface IBetService
     /// <returns> The Bet where vote were made.</returns>
     Task<Bet> VoteAsync(UserBetDto userBetDto);
     /// <summary>
+    /// Checks if the user has voted.
+    /// </summary>
+    /// <param name="userId"> User to check.</param>
+    /// <param name="betId"> Bet to check in.</param>
+    /// <returns> True if the user has voted and false otherwise.</returns>
+    Task<Boolean> HasUserVotedAsync(int betId, int userId);
+    /// <summary>
     /// Deletes the bet.
     /// </summary>
     /// <param name="betId"> Id of bet to delete.</param>

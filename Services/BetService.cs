@@ -230,7 +230,8 @@ public class BetService : IBetService
 
         _dbContext.Bets.Update(bet);
 
-        await AddWinToUsersAsync(bet, winner);
+        if (winner.Name != "Ни один из исходов")
+            await AddWinToUsersAsync(bet, winner);
 
         await _dbContext.SaveChangesAsync();
     }

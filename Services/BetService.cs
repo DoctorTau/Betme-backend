@@ -105,6 +105,8 @@ public class BetService : IBetService
 
         if (DateTime.Now > bet.ClosedAt)
         {
+            bet.Status = BetStatus.Closed;
+            await _dbContext.SaveChangesAsync();
             throw new ArgumentException("You can't start a bet after the closing time.");
         }
 

@@ -17,17 +17,11 @@ public class BetService : IBetService
     {
         Bet newBet = new(bet.Name,
                          bet.Description,
-                         bet.ClosedAt,
+                         DateTime.Now.AddDays(7).ToUniversalTime(), // 7 days from now. In future we will add ability to change this.
                          userId);
 
         await _dbContext.Bets.AddAsync(newBet);
         await _dbContext.SaveChangesAsync();
-
-        // Create a timer to finish the bet at the specified time.
-        Timer timer = new Timer(async _ =>
-        {
-            await FinishBetAsync(newBet.Id);
-        }, null, bet.ClosedAt - DateTime.UtcNow, TimeSpan.Zero);
 
         return newBet;
     }
@@ -103,6 +97,12 @@ public class BetService : IBetService
 
         DeleteUnselectedOutcomes(bet);
 
+        await AddOutcomeAsync(new OutcomeDto
+        {
+            BetId = bet.Id,
+            Name = "Ни один из исходов" // "None of the outcomes"
+        });
+
         if (DateTime.Now > bet.ClosedAt)
         {
             bet.Status = BetStatus.Closed;
@@ -147,7 +147,7 @@ public class BetService : IBetService
         }
 
         Bet? bet = await GetBetByIdAsync(userBetDto.BetId);
-        if (bet.Status != BetStatus.Voting)
+        if (bet.Status != BetStatus.Voting && bet.Status != BetStatus.Open)
         {
             throw new ArgumentException("Bet is not in voting phase.");
         }
@@ -163,6 +163,11 @@ public class BetService : IBetService
         _dbContext.Outcomes.Update(outcome);
         _dbContext.UserBets.Update(userBet);
         await _dbContext.SaveChangesAsync();
+
+        if (CheckVotingInBet(bet))
+        {
+            await FinishBetVoting(bet.Id);
+        }
 
         return await GetBetByIdAsync(userBetDto.BetId);
     }
@@ -232,7 +237,7 @@ public class BetService : IBetService
 
     private bool CheckVotingInBet(Bet bet)
     {
-        if (bet.Status != BetStatus.Voting)
+        if (bet.Status != BetStatus.Voting && bet.Status != BetStatus.Open)
         {
             return false;
         }

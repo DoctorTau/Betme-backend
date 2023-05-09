@@ -229,6 +229,31 @@ public class BetService : IBetService
         bet.WinOutcomeId = winner.Id;
 
         _dbContext.Bets.Update(bet);
+
+        await AddWinToUsersAsync(bet, winner);
+
+        await _dbContext.SaveChangesAsync();
+    }
+
+    private async Task AddWinToUsersAsync(Bet bet, Outcome winner)
+    {
+        List<UserBet> userBets = _dbContext.UserBets.Where(ub => ub.BetId == bet.Id)
+                                                    .ToList();
+        foreach (UserBet userBet in userBets)
+        {
+            if (userBet.OutcomeId == winner.Id)
+            {
+                User? user = _dbContext.Users.FirstOrDefault(u => u.Id == userBet.UserId);
+                if (user == null)
+                {
+                    throw new ArgumentException("User not found.");
+                }
+
+                user.NumberOfWins++;
+                _dbContext.Users.Update(user);
+            }
+        }
+
         await _dbContext.SaveChangesAsync();
     }
 

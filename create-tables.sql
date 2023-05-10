@@ -12,6 +12,7 @@ CREATE TABLE "Bets" (
     "Description" text NOT NULL,
     "CreatorId" integer NOT NULL,
     "CreatedAt" timestamp with time zone NOT NULL,
+    "ClosedAt" timestamp with time zone NOT NULL,
     "Status" integer NOT NULL,
     CONSTRAINT "PK_Bets" PRIMARY KEY ("Id")
 );
@@ -80,6 +81,15 @@ ALTER TABLE "Users" ADD "Role" integer NOT NULL DEFAULT 0;
 
 INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
 VALUES ('20230502103142_UserRoleMig', '7.0.5');
+
+COMMIT;
+
+START TRANSACTION;
+
+ALTER TABLE "Bets" DROP COLUMN "ClosedAt";
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20230510203357_RemoveClosedAt', '7.0.5');
 
 COMMIT;
 

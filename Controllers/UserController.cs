@@ -16,6 +16,10 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
+    /// <summary>
+    /// Returns all users.
+    /// </summary>
+    /// <returns> All user list.</returns>
     [HttpGet]
     public async Task<IActionResult> GetAllUsersAsync()
     {

@@ -13,20 +13,11 @@ public class UserService : IUserService
         _dbContext = dbContext;
     }
 
-    /// <summary>
-    /// Gets the list with all users.
-    /// </summary>
-    /// <returns> List of users.</returns>
     public async Task<List<User>> GetAllUsersAsync()
     {
         return await _dbContext.Users.ToListAsync();
     }
 
-    /// <summary>
-    /// Gets a user by id.
-    /// </summary>
-    /// <param name="id"> Id of users.</param>
-    /// <returns>User with specified id.</returns>
     public async Task<User> GetUserByIdAsync(int id)
     {
         User? user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
@@ -45,6 +36,24 @@ public class UserService : IUserService
         List<Bet> bets = await _dbContext.Bets.Where(b => betIds.Contains(b.Id))
                                               .ToListAsync();
         return bets;
+    }
+
+    public async Task AddWinToUsersAsync(Bet bet, Outcome winner)
+    {
+        List<UserBet> userBets = _dbContext.UserBets.Where(ub => ub.BetId == bet.Id)
+                                                    .ToList();
+        foreach (UserBet userBet in userBets)
+        {
+            if (userBet.OutcomeId == winner.Id)
+            {
+                User user = await GetUserByIdAsync(userBet.UserId);
+
+                user.NumberOfWins++;
+                _dbContext.Users.Update(user);
+            }
+        }
+
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task<User> UpdateUserAsync(int id, User user)

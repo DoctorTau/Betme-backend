@@ -21,6 +21,11 @@ public class AuthController : ControllerBase
         _dbContext = dbContext;
     }
 
+    /// <summary>
+    /// Registers a user by user name, email and password.
+    /// </summary>
+    /// <param name="request"> Name, email and password in DTO class.</param>
+    /// <returns>Ok if user successfully registered.</returns>
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync(UserRegistrationDto request)
     {
@@ -44,8 +49,13 @@ public class AuthController : ControllerBase
         return Ok(user);
     }
 
+    /// <summary>
+    /// Return a JWT token if user successfully logged in.
+    /// </summary>
+    /// <param name="request"> Email and password in DTO class.</param>
+    /// <returns> JWT token with ok code.</returns>
     [HttpPost("login")]
-    public ActionResult<string> Login(UserAuthDto request)
+    public ActionResult<string> LoginAsync(UserAuthDto request)
     {
         string errorMessage = "Invalid email or password";
         User? user = _dbContext.Users.FirstOrDefault(u => u.Email == request.Email);
@@ -66,7 +76,11 @@ public class AuthController : ControllerBase
         }
     }
 
-    // Create JWT token
+    /// <summary>
+    /// Creates a JWT token for a user.
+    /// </summary>
+    /// <param name="user"> User for token creation.</param>
+    /// <returns> Created JWT.</returns>
     private string CreateToken(User user)
     {
         var claims = new List<Claim>

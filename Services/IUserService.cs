@@ -25,12 +25,19 @@ public interface IUserService
     Task<List<Bet>> GetAllBetsOfUserAsync(int userId);
 
     /// <summary>
+    /// Adds a win to all users who bet on the winner.
+    /// </summary>
+    /// <param name="bet"> Finished bet. </param>
+    /// <param name="winner"> Winned outcome.</param>
+    /// <returns></returns>
+    Task AddWinToUsersAsync(Bet bet, Outcome winner);
+
+    /// <summary>
     /// Updates user.
     /// </summary>
     /// <param name="user"> New user params.</param>
     /// <returns> Updated user.</returns>
     Task<User> UpdateUserAsync(int id, User user);
-
 
     /// <summary>
     /// Deletes user.

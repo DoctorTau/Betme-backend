@@ -16,7 +16,9 @@ builder.Services.AddDbContext<AppDbContext>();
 
 // Add services
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IOutcomeService, OutcomeService>();
 builder.Services.AddScoped<IBetService, BetService>();
+builder.Services.AddScoped<IVoteService, VoteService>();
 
 // Add authentication
 builder.Services.AddAuthentication().AddJwtBearer(

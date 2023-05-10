@@ -10,9 +10,11 @@ namespace BetMe.Controllers;
 public class BetController : ControllerBase
 {
     private IBetService _betService;
-    public BetController(IBetService betService)
+    private IOutcomeService _outcomeService;
+    public BetController(IBetService betService, IOutcomeService outcomeService)
     {
         _betService = betService;
+        _outcomeService = outcomeService;
     }
 
     [HttpGet]
@@ -55,7 +57,7 @@ public class BetController : ControllerBase
     [HttpPost("outcome"), Authorize]
     public async Task<IActionResult> AddOutcomeAsync(OutcomeDto outcomeDto)
     {
-        Outcome outcome = await _betService.AddOutcomeAsync(outcomeDto);
+        Outcome outcome = await _outcomeService.AddOutcomeAsync(outcomeDto);
         return Ok(outcome);
     }
 
@@ -69,7 +71,7 @@ public class BetController : ControllerBase
     [HttpGet("{id}/outcomes")]
     public async Task<IActionResult> GetAllOutcomesOfBetAsync(int id)
     {
-        List<Outcome> outcomes = await _betService.GetAllOutcomesOfBetAsync(id);
+        List<Outcome> outcomes = await _outcomeService.GetAllOutcomesOfBetAsync(id);
         return Ok(outcomes);
     }
 
@@ -104,39 +106,6 @@ public class BetController : ControllerBase
             bet = await _betService.StartBetAsync(id);
 
             return Ok(bet);
-        }
-        catch (ArgumentException)
-        {
-            return NotFound("Bet not found.");
-        }
-    }
-
-    [HttpPut("vote"), Authorize]
-    public async Task<IActionResult> VoteAsync(UserBetDto userBetDto)
-    {
-        try
-        {
-            await _betService.VoteAsync(userBetDto);
-            return Ok();
-        }
-        catch (ArgumentException e)
-        {
-            return NotFound(e.Message);
-        }
-    }
-
-    /// <summary>
-    /// Checks if the user has voted for the given bet.
-    /// </summary>
-    /// <param name="betId"> Bet to check in.</param>
-    /// <returns>True if user have voted and false otherwise</returns>
-    [HttpGet("{betId}/checkVote/{userId}"), Authorize]
-    public async Task<IActionResult> CheckIfUserVotedAsync(int betId, int userId)
-    {
-        try
-        {
-            bool voted = await _betService.HasUserVotedAsync(betId, userId);
-            return Ok(voted);
         }
         catch (ArgumentException)
         {

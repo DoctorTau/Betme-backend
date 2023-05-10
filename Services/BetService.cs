@@ -17,7 +17,6 @@ public class BetService : IBetService
     {
         Bet newBet = new(bet.Name,
                          bet.Description,
-                         DateTime.Now.AddDays(7).ToUniversalTime(), // 7 days from now. In future we will add ability to change this.
                          userId);
 
         await _dbContext.Bets.AddAsync(newBet);
@@ -103,12 +102,6 @@ public class BetService : IBetService
             Name = "Ни один из исходов" // "None of the outcomes"
         });
 
-        if (DateTime.Now > bet.ClosedAt)
-        {
-            bet.Status = BetStatus.Closed;
-            await _dbContext.SaveChangesAsync();
-            throw new ArgumentException("You can't start a bet after the closing time.");
-        }
 
         bet.Status = BetStatus.Open;
 

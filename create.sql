@@ -12,7 +12,6 @@ CREATE TABLE "Bets" (
     "Description" text NOT NULL,
     "CreatorId" integer NOT NULL,
     "CreatedAt" timestamp with time zone NOT NULL,
-    "ClosedAt" timestamp with time zone NOT NULL,
     "Status" integer NOT NULL,
     CONSTRAINT "PK_Bets" PRIMARY KEY ("Id")
 );

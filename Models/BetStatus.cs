@@ -4,7 +4,6 @@ namespace BetMe.Models
     {
         Creating,
         Open,
-        Voting,
         Closed
     }
 }

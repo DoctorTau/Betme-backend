@@ -93,3 +93,10 @@ VALUES ('20230510203357_RemoveClosedAt', '7.0.5');
 
 COMMIT;
 
+START TRANSACTION;
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20230510230525_RemoveVotingStage', '7.0.5');
+
+COMMIT;
+

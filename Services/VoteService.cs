@@ -32,7 +32,7 @@ public class VoteService : IVoteService
         }
 
         Bet? bet = await _betService.GetBetByIdAsync(userBetDto.BetId);
-        if (bet.Status != BetStatus.Voting && bet.Status != BetStatus.Open)
+        if (bet.Status != BetStatus.Open)
         {
             throw new ArgumentException("Bet is not in voting phase.");
         }
@@ -85,7 +85,7 @@ public class VoteService : IVoteService
 
     public bool CheckVotingInBet(Bet bet)
     {
-        if (bet.Status != BetStatus.Voting && bet.Status != BetStatus.Open)
+        if (bet.Status != BetStatus.Open)
         {
             return false;
         }

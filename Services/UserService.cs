@@ -18,7 +18,7 @@ public class UserService : IUserService
         return await _dbContext.Users.ToListAsync();
     }
 
-    public async Task<User> GetUserByIdAsync(int id)
+    public async Task<User> GetUserByIdAsync(long id)
     {
         User? user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
         if (user == null)
@@ -28,9 +28,9 @@ public class UserService : IUserService
         return user;
     }
 
-    public async Task<List<Bet>> GetAllBetsOfUserAsync(int userId)
+    public async Task<List<Bet>> GetAllBetsOfUserAsync(long userId)
     {
-        List<int> betIds = await _dbContext.UserBets.Where(ub => ub.UserId == userId)
+        List<long> betIds = await _dbContext.UserBets.Where(ub => ub.UserId == userId)
                                                     .Select(ub => ub.BetId)
                                                     .ToListAsync();
         List<Bet> bets = await _dbContext.Bets.Where(b => betIds.Contains(b.Id))
@@ -56,7 +56,7 @@ public class UserService : IUserService
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<User> UpdateUserAsync(int id, User user)
+    public async Task<User> UpdateUserAsync(long id, User user)
     {
         User? userToUpdate = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
         if (userToUpdate == null)
@@ -69,7 +69,7 @@ public class UserService : IUserService
         return userToUpdate;
     }
 
-    public async Task<User> DeleteUserAsync(int userId)
+    public async Task<User> DeleteUserAsync(long userId)
     {
         User? user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null)

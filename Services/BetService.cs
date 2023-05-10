@@ -15,7 +15,7 @@ public class BetService : IBetService
         _outcomeService = outcomeService;
     }
 
-    public async Task<Bet> CreateBetAsync(BetCreatingDto bet, int userId)
+    public async Task<Bet> CreateBetAsync(BetCreatingDto bet, long userId)
     {
         Bet newBet = new(bet.Name,
                          bet.Description,
@@ -33,7 +33,7 @@ public class BetService : IBetService
         return bets;
     }
 
-    public Task<Bet> GetBetByIdAsync(int id)
+    public Task<Bet> GetBetByIdAsync(long id)
     {
         Bet? bet = _dbContext.Bets.FirstOrDefault(b => b.Id == id);
         if (bet == null)
@@ -43,7 +43,7 @@ public class BetService : IBetService
         return Task.FromResult(bet);
     }
 
-    public Task<List<UserBet>> GetAllUsersOfBetAsync(int betId)
+    public Task<List<UserBet>> GetAllUsersOfBetAsync(long betId)
     {
         List<UserBet> userBets = _dbContext.UserBets.Where(ub => ub.BetId == betId)
                                                .ToList();
@@ -67,7 +67,7 @@ public class BetService : IBetService
         return Task.FromResult(ub);
     }
 
-    public async Task<Bet> StartBetAsync(int betId)
+    public async Task<Bet> StartBetAsync(long betId)
     {
         Bet? bet = await _dbContext.Bets.FirstOrDefaultAsync(b => b.Id == betId);
         if (bet == null)
@@ -108,7 +108,7 @@ public class BetService : IBetService
     }
 
 
-    public Task<Bet> DeleteBetAsync(int betId)
+    public Task<Bet> DeleteBetAsync(long betId)
     {
         Bet? bet = _dbContext.Bets.FirstOrDefault(b => b.Id == betId);
         if (bet == null)

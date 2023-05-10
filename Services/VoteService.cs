@@ -57,7 +57,7 @@ public class VoteService : IVoteService
         return await _betService.GetBetByIdAsync(userBetDto.BetId);
     }
 
-    public Task<Boolean> HasUserVotedAsync(int betId, int userId)
+    public Task<Boolean> HasUserVotedAsync(long betId, long userId)
     {
         UserBet? userBet = _dbContext.UserBets.FirstOrDefault(ub => ub.BetId == betId && ub.UserId == userId);
         if (userBet == null)
@@ -68,7 +68,7 @@ public class VoteService : IVoteService
         return Task.FromResult(userBet.HasVoted);
     }
 
-    public async Task FinishBetVoting(int betId)
+    public async Task FinishBetVoting(long betId)
     {
         Bet? bet = await _dbContext.Bets.FirstOrDefaultAsync(b => b.Id == betId);
         if (bet == null)

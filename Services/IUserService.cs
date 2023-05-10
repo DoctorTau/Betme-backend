@@ -15,14 +15,14 @@ public interface IUserService
     /// </summary>
     /// <param name="id">Id of user to find.</param>
     /// <returns>User with provided id.</returns>
-    Task<User> GetUserByIdAsync(int id);
+    Task<User> GetUserByIdAsync(long id);
 
     /// <summary>
     /// Gets all bets of the user.
     /// </summary>
     /// <param name="userId"> User id.</param>
     /// <returns> List of all bets where user takes part in.</returns>
-    Task<List<Bet>> GetAllBetsOfUserAsync(int userId);
+    Task<List<Bet>> GetAllBetsOfUserAsync(long userId);
 
     /// <summary>
     /// Adds a win to all users who bet on the winner.
@@ -37,12 +37,12 @@ public interface IUserService
     /// </summary>
     /// <param name="user"> New user params.</param>
     /// <returns> Updated user.</returns>
-    Task<User> UpdateUserAsync(int id, User user);
+    Task<User> UpdateUserAsync(long id, User user);
 
     /// <summary>
     /// Deletes user.
     /// </summary>
     /// <param name="userId"> Id of user to delete.</param>
     /// <returns> Deleted user.</returns>
-    Task<User> DeleteUserAsync(int userId);
+    Task<User> DeleteUserAsync(long userId);
 }

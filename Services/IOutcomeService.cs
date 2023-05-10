@@ -15,7 +15,7 @@ public interface IOutcomeService
     /// </summary>
     /// <param name="betId">Id of the bet.</param>
     /// <returns> List of outcomes of the bet.</returns>
-    Task<List<Outcome>> GetAllOutcomesOfBetAsync(int betId);
+    Task<List<Outcome>> GetAllOutcomesOfBetAsync(long betId);
     /// <summary>
     /// Sets the winner outcome to bet.
     /// </summary>

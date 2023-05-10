@@ -100,3 +100,30 @@ VALUES ('20230510230525_RemoveVotingStage', '7.0.5');
 
 COMMIT;
 
+START TRANSACTION;
+
+ALTER TABLE "Users" ALTER COLUMN "Id" TYPE bigint;
+
+ALTER TABLE "UserBets" ALTER COLUMN "UserId" TYPE bigint;
+
+ALTER TABLE "UserBets" ALTER COLUMN "OutcomeId" TYPE bigint;
+
+ALTER TABLE "UserBets" ALTER COLUMN "BetId" TYPE bigint;
+
+ALTER TABLE "UserBets" ALTER COLUMN "Id" TYPE bigint;
+
+ALTER TABLE "Outcomes" ALTER COLUMN "BetId" TYPE bigint;
+
+ALTER TABLE "Outcomes" ALTER COLUMN "Id" TYPE bigint;
+
+ALTER TABLE "Bets" ALTER COLUMN "WinOutcomeId" TYPE bigint;
+
+ALTER TABLE "Bets" ALTER COLUMN "CreatorId" TYPE bigint;
+
+ALTER TABLE "Bets" ALTER COLUMN "Id" TYPE bigint;
+
+INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+VALUES ('20230510234451_IdLong', '7.0.5');
+
+COMMIT;
+

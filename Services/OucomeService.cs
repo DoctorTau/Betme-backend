@@ -29,7 +29,7 @@ public class OutcomeService : IOutcomeService
         return outcome;
     }
 
-    public async Task<List<Outcome>> GetAllOutcomesOfBetAsync(int betId)
+    public async Task<List<Outcome>> GetAllOutcomesOfBetAsync(long betId)
     {
         List<Outcome> outcomes = await _dbContext.Outcomes.Where(o => o.BetId == betId)
                                                           .ToListAsync();

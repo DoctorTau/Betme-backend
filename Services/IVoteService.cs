@@ -16,13 +16,13 @@ public interface IVoteService
     /// <param name="userId"> User to check.</param>
     /// <param name="betId"> Bet to check in.</param>
     /// <returns> True if the user has voted and false otherwise.</returns>
-    Task<Boolean> HasUserVotedAsync(int betId, int userId);
+    Task<Boolean> HasUserVotedAsync(long betId, long userId);
     /// <summary>
     /// Finishes the voting in the bet.
     /// </summary>
     /// <param name="betId"> Id of bet to finish.</param>
     /// <returns></returns>
-    Task FinishBetVoting(int betId);
+    Task FinishBetVoting(long betId);
     /// <summary>
     /// Checks if all users have voted in the bet.
     /// </summary>

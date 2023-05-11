@@ -29,6 +29,14 @@ public class OutcomeService : IOutcomeService
         return outcome;
     }
 
+    public async Task<Outcome> DeleteOutcome(Outcome outcome)
+    {
+        _dbContext.Outcomes.Remove(outcome);
+        await _dbContext.SaveChangesAsync();
+
+        return outcome;
+    }
+
     public async Task<List<Outcome>> GetAllOutcomesOfBetAsync(long betId)
     {
         List<Outcome> outcomes = await _dbContext.Outcomes.Where(o => o.BetId == betId)

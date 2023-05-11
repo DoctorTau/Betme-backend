@@ -108,7 +108,7 @@ public class BetService : IBetService
     }
 
 
-    public Task<Bet> DeleteBetAsync(long betId)
+    public async Task<Bet> DeleteBetAsync(long betId)
     {
         Bet? bet = _dbContext.Bets.FirstOrDefault(b => b.Id == betId);
         if (bet == null)
@@ -117,8 +117,14 @@ public class BetService : IBetService
         }
 
         _dbContext.Bets.Remove(bet);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
 
-        return Task.FromResult(bet);
+        List<Outcome> outcomes = await _outcomeService.GetAllOutcomesOfBetAsync(betId);
+        foreach (Outcome outcome in outcomes)
+        {
+            await _outcomeService.DeleteOutcome(outcome);
+        }
+
+        return bet;
     }
 }

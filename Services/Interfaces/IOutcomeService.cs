@@ -22,4 +22,10 @@ public interface IOutcomeService
     /// <param name="bet"> Bet to set outcome.</param>
     /// <returns></returns>
     Task SetWinner(Bet bet);
+    /// <summary>
+    /// Deletes the outcome.
+    /// </summary>
+    /// <param name="outcome"> Outcome to delete. </param>
+    /// <returns> Deleted outcome.</returns>
+    Task<Outcome> DeleteOutcome(Outcome outcome);
 }

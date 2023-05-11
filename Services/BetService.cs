@@ -75,7 +75,7 @@ public class BetService : IBetService
             throw new ArgumentException("Bet not found.");
         }
 
-        DeleteUnselectedOutcomes(bet);
+        await DeleteUnselectedOutcomesAsync(bet);
 
         await _outcomeService.AddOutcomeAsync(new OutcomeDto
         {
@@ -90,7 +90,7 @@ public class BetService : IBetService
         return bet;
     }
 
-    private void DeleteUnselectedOutcomes(Bet bet)
+    private async Task DeleteUnselectedOutcomesAsync(Bet bet)
     {
         List<Outcome> outcomes = _dbContext.Outcomes.Where(o => o.BetId == bet.Id)
                                                    .ToList();
@@ -104,7 +104,7 @@ public class BetService : IBetService
         }
 
         _dbContext.Outcomes.RemoveRange(outcomesToDelete);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
     }
 
 
@@ -121,6 +121,4 @@ public class BetService : IBetService
 
         return Task.FromResult(bet);
     }
-
-
 }

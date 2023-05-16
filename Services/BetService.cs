@@ -72,7 +72,28 @@ public class BetService : IBetService
         Bet? bet = await _dbContext.Bets.FirstOrDefaultAsync(b => b.Id == betId);
         if (bet == null)
         {
-            throw new ArgumentException("Bet not found.");
+            throw new KeyNotFoundException("Bet not found.");
+        }
+
+        List<UserBet> participants = await GetAllUsersOfBetAsync(betId);
+        if (participants.Count() < 2)
+        {
+            throw new ArgumentException("You can't start bet with only one participant.");
+        }
+        // Count that there are at least two participants with different outcomes 
+        long outcomeId = participants[0].OutcomeId;
+        bool isChange = false;
+        foreach (UserBet participant in participants)
+        {
+            if (participant.OutcomeId != outcomeId)
+            {
+                isChange = true;
+                break;
+            }
+        }
+        if (!isChange)
+        {
+            throw new ArgumentException("You can't start bet with only one option selected");
         }
 
         await DeleteUnselectedOutcomesAsync(bet);

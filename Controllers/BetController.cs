@@ -107,9 +107,13 @@ public class BetController : ControllerBase
 
             return Ok(bet);
         }
-        catch (ArgumentException)
+        catch (KeyNotFoundException ex)
         {
-            return NotFound("Bet not found.");
+            return NotFound(ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
 

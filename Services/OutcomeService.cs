@@ -53,8 +53,15 @@ public class OutcomeService : IOutcomeService
         {
             throw new ArgumentException("No outcomes found.");
         }
-
-        Outcome winner = outcomes[0];
+        Outcome winner;
+        if (outcomes[0] == outcomes[1])
+        {
+            winner = outcomes.First(o => o.Name == "Ни один из исходов");
+        }
+        else
+        {
+            winner = outcomes[0];
+        }
         bet.WinOutcomeId = winner.Id;
 
         _dbContext.Bets.Update(bet);

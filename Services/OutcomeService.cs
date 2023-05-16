@@ -54,7 +54,7 @@ public class OutcomeService : IOutcomeService
             throw new ArgumentException("No outcomes found.");
         }
         Outcome winner;
-        if (outcomes[0] == outcomes[1])
+        if (outcomes[0].Votes == outcomes[1].Votes)
         {
             winner = outcomes.First(o => o.Name == "Ни один из исходов");
         }

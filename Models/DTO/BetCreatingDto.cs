@@ -6,6 +6,6 @@ public class BetCreatingDto
 {
     [Required, MaxLength(256)]
     public required string Name { get; set; }
-    [Required, MaxLength(1024)]
+    [MaxLength(1024)]
     public required string Description { get; set; }
 }
